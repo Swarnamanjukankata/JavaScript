@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>quizz</title>
+    <link rel="stylesheet" href="quizz.css">
+</head>
+<body>
+    <div class="app">
+        <h1>Simple Quiz</h1>
+        <div class="quizz">
+            <h2 id="question">Question goes here</h2>
+            <div id="answer-buttons">
+                <button class="btn">Answer1</button>
+                <button class="btn">Answer2</button>
+                <button class="btn">Answer3</button>
+                <button class="btn">Answer4</button>
+            </div>
+            <button id="next">Next</button>
+        </div>
+    </div>
+    <script>
+        const questions=[
+            {
+                question:"which is largest animal in the world?",
+                answers:[
+                    {text:"shark",correct:false},
+                    {text:"Blue whale",correct:true},
+                    {text:"Elephant",correct:false},
+                    {text:"Giraffe",correct:false},
+                ]
+            },
+            {
+                question:"which is largest animal in the world?",
+                answers:[
+                    {text:"Vatican City",correct:true},
+                    {text:"Bhutan",correct:false},
+                    {text:"Nepal",correct:false},
+                    {text:"Shri Lanka",correct:false},
+                ]
+            },
+            {
+                question:"which is largest desert in the world?",
+                answers:[
+                    {text:"Kalahari",correct:false},
+                    {text:"Gobi",correct:false},
+                    {text:"Sahara",correct:false},
+                    {text:"Antarctica",correct:true},
+                ]
+            },
+            {
+                question:"which is the smallest continent in the world?",
+                answers:[
+                    {text:"Asia",correct:false},
+                    {text:"Australia",correct:true},
+                    {text:"Arctic",correct:false},
+                    {text:"Africa",correct:false},
+                ]
+            },
+        ];
+        const questionelement=document.getElementById("question");
+        const answerbuttons=document.getElementById("answer-buttons");
+        const nextbutton=document.getElementById("next");
+
+        let currentquestionindex=0;
+        let score=0;
+        function startquix(){
+            currentquestionindex=0;
+            score=0;
+            nextbutton.innerHTML="Next";
+            showquestion();
+        }
+        function showquestion(){
+            resetstate();
+            let currentquestion=questions[currentquestionindex];
+            let question_no=currentquestionindex+1;
+            questionelement.innerHTML=question_no+ " . " +currentquestion.question;
+            
+            currentquestion.answers.forEach(answer=>{
+                const button=document.createElement("button");
+                button.innerHTML=answer.text;
+                button.classList.add("btn");
+                answerbuttons.appendChild(button);
+                if(answer.correct){
+                    button.dataset.correct=answer.correct;
+                }
+                button.addEventListener ("click",selectanswer);
+            });
+        }
+        function resetstate(){
+            nextbutton.style.display="none";
+            while(answerbuttons.firstChild){
+                answerbuttons.removeChild(answerbuttons.firstChild)
+            }
+        }
+        function selectanswer(e){
+            const selectedBtn=e.target;
+            const iscorrect=selectedBtn.dataset.correct==="true";
+            if(iscorrect){
+                selectedBtn.classList.add("correct");
+                score++;
+            }
+            else{
+                selectedBtn.classList.add("incorrect");
+            }
+
+            Array.from(answerbuttons.children).forEach(button=>{
+                if(button.dataset.correct==="true"){
+                    button.classList.add("correct");
+                }
+                button.disabled=true;
+            });
+            nextbutton.style.display="block";
+            
+        }
+        function showscore(){
+            resetstate();
+            questionelement.innerHTML=`you scored ${score} out of ${questions.length}!`;
+            nextbutton.innerHTML="Play Again";
+            nextbutton.style.display="block";
+        }
+        function handlenextbutton(){
+            currentquestionindex++;
+            if(currentquestionindex<questions.length){
+                showquestion()
+            }else{
+                showscore();
+            }
+        }
+        nextbutton.addEventListener("click",()=>{
+            if(currentquestionindex<questions.length){
+                handlenextbutton();
+            }else{
+                startquix();
+            }
+        })
+        startquix();
+    </script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculater</title>
+    <link rel="stylesheet" href="calculater.css">
+</head>
+<body>
+    <div class="container">
+        <h1>JavaScript<br> <span>Age Calculator</span></h1>
+        <div class="box-contianer">
+            <div class="input-box">
+                <input type="date" placeholder="Enter your birthday" id="date">
+            </div>
+            <button id="btn">Calculate</button>
+            
+        </div>
+        <p id="para"></p>
+    </div>
+    <script>
+        const calculaterelement=document.getElementById("btn");
+        const inputelement=document.getElementById("date");
+        inputelement.max = new Date().toISOString().split("T")[0];
+        const message=document.getElementById("para");
+
+        calculaterelement.addEventListener("click",()=>{
+            let birthdate=new Date(inputelement.value);
+            let d_b=birthdate.getDate();
+            let m_b=birthdate.getMonth()+1;
+            let y_b=birthdate.getFullYear();
+
+            let today=new Date();
+            let d_p=today.getDate();
+            let m_p=today.getMonth()+1;
+            let y_p=today.getFullYear();
+
+            let y3=y_p-y_b;
+            let m3,d3;
+            if(m_p>=m_b){
+                m3=m_p-m_b;
+            }else {
+                y3--;
+                m3=12+m_p-m_b;
+            }
+            if(d_p>=d_b){
+                d3=d_b-d_p;
+            }else{
+                m3--;
+                d3=getdaysinmonth(y_b,m_b)+d_p-d_b;
+            }
+            if(m3<0){
+                m3=11;
+                y3--;
+            }
+            function getdaysinmonth(year,month){
+                return new Date(year,month,0).getDate(); 
+
+            }
+            console.log(y3,m3,d3);
+            message.textContent=`you are ${y3} years,${m3} months and ${d3} days old`
+        })
+    </script>
+</body>
+</html>
